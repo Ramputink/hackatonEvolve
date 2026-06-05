@@ -119,6 +119,10 @@ export default function CoachPage() {
         avatar="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?q=80&w=640&auto=format&fit=crop"
         quote="Hola, cuéntame: ¿qué te gusta hacer cuando no estás en clase?"
         accent="#c0c1ff"
+        dynamicVariables={{
+          student_name: nameInput.trim() || "estudiante",
+          interests: Array.from(selected).join(", ") || "aún sin definir",
+        }}
       />
 
       {/* Separador */}

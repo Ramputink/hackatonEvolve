@@ -48,6 +48,12 @@ export default function PersonajesPage() {
 
   // --- Vista de sesión activa ---
   if (active) {
+    const profile = loadProfile();
+    const sessionVars = {
+      student_name: profile.name || "estudiante",
+      interests: profile.interests.map((i) => i.topic).join(", ") || "varios temas",
+      character: active.name,
+    };
     return (
       <AppShell live>
         {/* Cabecera con botón "volver" */}
@@ -76,6 +82,7 @@ export default function PersonajesPage() {
           avatar={active.avatar}
           quote={active.quote}
           accent={active.accent}
+          dynamicVariables={sessionVars}
           onEnd={() => {
             addChat({
               characterId: active.id,

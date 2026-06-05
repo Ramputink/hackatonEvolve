@@ -93,6 +93,14 @@ export default function VocacionalPage() {
           avatar="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=640&auto=format&fit=crop"
           quote="Con todo lo que hemos descubierto, exploremos qué caminos encajan realmente contigo."
           accent="#ffb783"
+          dynamicVariables={{
+            student_name: profile?.name || "estudiante",
+            interests:
+              profile?.interests.map((i) => i.topic).join(", ") || "aún sin definir",
+            characters_talked:
+              profile?.chats.map((c) => c.character).join(", ") || "ninguno todavía",
+            suggested_areas: careers.map((c) => c.area).join(", ") || "por explorar",
+          }}
         />
       </section>
     </AppShell>

@@ -52,11 +52,17 @@ const SECONDARY_THRESHOLD = 0.55;
 export default function VoiceVisualizer({
   active = true,
   bars = 44,
+  getFrequency,
 }: {
   active?: boolean;
   bars?: number;
+  /** Si se provee, las barras reaccionan al audio REAL (bytes 0-255 del SDK de ElevenLabs). */
+  getFrequency?: () => Uint8Array;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  // Mantén la última función en un ref para no recrear la animación en cada render.
+  const freqRef = useRef<typeof getFrequency>(getFrequency);
+  freqRef.current = getFrequency;
 
   useEffect(() => {
     const container = ref.current;
@@ -92,8 +98,19 @@ export default function VoiceVisualizer({
       const dt = Math.min(timestamp - lastTime, 50); // cap a 50ms
       lastTime = timestamp;
 
-      if (active) {
-        // Actualizar targets con ondas sinusoidales + ruido
+      // Datos de audio reales si el SDK los provee.
+      const freq = active ? freqRef.current?.() : undefined;
+
+      if (active && freq && freq.length > 0) {
+        // Mapea cada barra a un bin de frecuencia (zona grave-media, 0-60% del espectro).
+        const usable = Math.max(1, Math.floor(freq.length * 0.6));
+        els.forEach((_, i) => {
+          const bin = Math.min(usable - 1, Math.floor((i / bars) * usable));
+          const v = freq[bin] / 255; // 0..1
+          target[i] = HEIGHT_MIN_ACTIVE + v * (HEIGHT_MAX - HEIGHT_MIN_ACTIVE);
+        });
+      } else if (active) {
+        // Sin datos reales: ondas sinusoidales + ruido (fallback / modo demo).
         els.forEach((_, i) => {
           const wave =
             Math.sin(timestamp * freqOffset[i] + phaseOffset[i]) * 0.5 +
