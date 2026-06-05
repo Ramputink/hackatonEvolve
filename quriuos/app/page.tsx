@@ -7,10 +7,10 @@ import ParticleField from "@/components/ParticleField";
 const STEPS = [
   {
     number: "01",
-    icon: "self_improvement",
-    label: "Coach",
+    icon: "forum",
+    label: "Conversa",
     description:
-      "Habla con tu coach personal. Él te escucha y descubre qué te apasiona.",
+      "Una sola conversación con Quriuos. Te escucha y descubre qué te apasiona.",
     href: "/coach",
     accent: "#c0c1ff", // primary
   },

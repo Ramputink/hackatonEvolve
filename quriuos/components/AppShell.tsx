@@ -5,9 +5,9 @@ import { usePathname } from "next/navigation";
 import ParticleField from "./ParticleField";
 
 const NAV = [
-  { href: "/coach",      label: "Coach",      icon: "self_improvement" },
-  { href: "/personajes", label: "Personajes",  icon: "groups"          },
-  { href: "/vocacional", label: "Futuro",      icon: "explore"         },
+  { href: "/coach",      label: "Hablar",      icon: "forum"   },
+  { href: "/personajes", label: "Personajes",  icon: "groups"  },
+  { href: "/vocacional", label: "Futuro",      icon: "explore" },
 ];
 
 // Icono SVG inline de la marca (Q con punto)

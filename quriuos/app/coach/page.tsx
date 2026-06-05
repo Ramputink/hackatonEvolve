@@ -6,6 +6,7 @@ import VoiceSession from "@/components/VoiceSession";
 import { ELEVENLABS } from "@/lib/elevenlabs";
 import { addInterest, removeInterest, setName, loadProfile } from "@/lib/profile";
 import type { InterestCategory } from "@/lib/profile";
+import { CHARACTERS } from "@/lib/characters";
 
 // Chips de intereses rápidos para alimentar el perfil aunque la voz no esté lista
 const INTEREST_CHIPS: { label: string; topic: string; category: InterestCategory; emoji: string }[] = [
@@ -79,12 +80,12 @@ export default function CoachPage() {
       {/* Cabecera de sección */}
       <div className="px-gutter pt-xl pb-md">
         <h1 className="text-headline-lg-mobile font-headline-lg-mobile text-on-surface">
-          Tu coach personal
+          Habla con Quriuos
         </h1>
         <p className="text-on-surface-variant text-body-md mt-xs leading-relaxed">
-          Habla con tu coach de voz y cuéntale qué te gusta. También puedes
-          elegir tus intereses aquí abajo para que te sugeramos los mejores
-          referentes.
+          Una sola conversación. Cuéntale qué te gusta y, según de lo que hables,
+          se irán uniendo referentes que te inspiran — y al final, tu orientación
+          de futuro. Todo con tu voz.
         </p>
       </div>
 
@@ -111,19 +112,42 @@ export default function CoachPage() {
         </div>
       </div>
 
-      {/* Sesión de voz con el coach */}
+      {/* Sesión de voz unificada — el orquestador Quriuos */}
       <VoiceSession
         agentId={ELEVENLABS.coachAgentId}
-        name="Tu Coach"
-        title="Coach personal · Quriuos"
+        name="Quriuos"
+        title="Tu guía · los referentes se unen solos"
         avatar="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?q=80&w=640&auto=format&fit=crop"
-        quote="Hola, cuéntame: ¿qué te gusta hacer cuando no estás en clase?"
+        quote="¡Hola! Cuéntame, ¿qué es eso que harías durante horas sin aburrirte?"
         accent="#c0c1ff"
         dynamicVariables={{
           student_name: nameInput.trim() || "estudiante",
           interests: Array.from(selected).join(", ") || "aún sin definir",
         }}
       />
+
+      {/* Referentes que pueden unirse a la charla */}
+      <div className="px-gutter pt-md">
+        <p className="text-label-sm font-label-sm uppercase tracking-widest text-on-surface-variant mb-sm text-center">
+          Pueden unirse según de lo que hables
+        </p>
+        <div className="flex gap-sm overflow-x-auto scrollbar-hide justify-center pb-xs">
+          {CHARACTERS.map((c) => (
+            <div key={c.id} className="flex flex-col items-center gap-1 shrink-0 w-16">
+              <div
+                className="w-12 h-12 rounded-full overflow-hidden border-2 opacity-70"
+                style={{ borderColor: `${c.accent}66` }}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={c.avatar} alt={c.name} className="w-full h-full object-cover grayscale" />
+              </div>
+              <span className="text-[10px] text-on-surface-variant text-center leading-tight truncate w-full">
+                {c.name.split(" ")[0]}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
 
       {/* Separador */}
       <div className="px-gutter">
