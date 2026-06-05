@@ -1,10 +1,10 @@
 "use client";
 // DUEÑO: Álvaro (Bloque 1 — Coach personal inspiracional).
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AppShell from "@/components/AppShell";
 import VoiceSession from "@/components/VoiceSession";
 import { ELEVENLABS } from "@/lib/elevenlabs";
-import { addInterest, setName, loadProfile } from "@/lib/profile";
+import { addInterest, removeInterest, setName, loadProfile } from "@/lib/profile";
 import type { InterestCategory } from "@/lib/profile";
 
 // Chips de intereses rápidos para alimentar el perfil aunque la voz no esté lista
@@ -24,24 +24,25 @@ const INTEREST_CHIPS: { label: string; topic: string; category: InterestCategory
 ];
 
 export default function CoachPage() {
-  const [selected, setSelected] = useState<Set<string>>(() => {
-    // Pre-selecciona los intereses ya guardados en perfil
-    if (typeof window === "undefined") return new Set();
-    const profile = loadProfile();
-    return new Set(profile.interests.map((i) => i.topic));
-  });
+  // Inicializa vacío y carga el perfil en useEffect para evitar mismatch de hidratación.
+  const [selected, setSelected] = useState<Set<string>>(new Set());
   const [saved, setSaved] = useState(false);
-  const [nameInput, setNameInput] = useState<string>(() => {
-    if (typeof window === "undefined") return "";
-    return loadProfile().name || "";
-  });
+  const [nameInput, setNameInput] = useState<string>("");
   const [nameSaved, setNameSaved] = useState(false);
+
+  useEffect(() => {
+    const profile = loadProfile();
+    setSelected(new Set(profile.interests.map((i) => i.topic)));
+    setNameInput(profile.name || "");
+  }, []);
 
   const toggleChip = (chip: (typeof INTEREST_CHIPS)[number]) => {
     setSelected((prev) => {
       const next = new Set(prev);
       if (next.has(chip.topic)) {
         next.delete(chip.topic);
+        // Deseleccionar también elimina el interés del perfil.
+        removeInterest(chip.topic);
       } else {
         next.add(chip.topic);
         // Guarda inmediatamente en el perfil

@@ -164,7 +164,7 @@ export default function PersonajesPage() {
             displayed.map((c, idx) => (
               <div
                 key={c.id}
-                className="animate-fadeIn"
+                className="animate-fade-up"
                 style={{ animationDelay: `${idx * 60}ms` }}
               >
                 <CharacterCard character={c} onSelect={setActive} />

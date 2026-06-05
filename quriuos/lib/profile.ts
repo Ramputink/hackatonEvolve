@@ -87,6 +87,15 @@ export function addInterest(i: Interest): StudentProfile {
   return p;
 }
 
+export function removeInterest(topic: string): StudentProfile {
+  const p = loadProfile();
+  p.interests = p.interests.filter(
+    (x) => x.topic.toLowerCase() !== topic.toLowerCase(),
+  );
+  saveProfile(p);
+  return p;
+}
+
 export function addChat(c: CharacterChat): StudentProfile {
   const p = loadProfile();
   p.chats.push(c);
